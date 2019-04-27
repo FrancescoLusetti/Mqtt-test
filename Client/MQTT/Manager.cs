@@ -7,19 +7,19 @@ using System.Text;
 
 namespace Client.MQTT
 {
-    class Client
+    class Manager
     {
 
         private IManagedMqttClient managedMqttClient;
 
-        public Client(string name)
+        public Manager(string name, string ip)
         {
             var options = new ManagedMqttClientOptionsBuilder().
                 WithAutoReconnectDelay(TimeSpan.FromSeconds(5))
                 .WithClientOptions(new MqttClientOptionsBuilder()
                     .WithClientId(name)
                     //.WithCredentials("panon", "dellaMarra")
-                    .WithTcpServer("")
+                    .WithTcpServer(ip)
                     .WithTls()
                     .Build())
                 .Build();

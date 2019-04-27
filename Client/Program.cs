@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Client.MQTT;
 
 namespace Client
 {
@@ -6,7 +6,9 @@ namespace Client
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            var name = "test";
+            var serverIp = "127.0.0.1:5000";
+            var client = new Manager(name,serverIp);
         }
     }
 }
