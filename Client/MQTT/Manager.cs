@@ -4,6 +4,7 @@ using MQTTnet.Extensions.ManagedClient;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Client.MQTT
 {
@@ -11,6 +12,7 @@ namespace Client.MQTT
     {
 
         private IManagedMqttClient managedMqttClient;
+        private IManagedMqttClientOptions clientOptions;
 
         public Manager(string name, string ip)
         {
@@ -20,26 +22,46 @@ namespace Client.MQTT
                     .WithClientId(name)
                     //.WithCredentials("panon", "dellaMarra")
                     .WithTcpServer(ip)
-                    .WithTls()
+                    //.WithTls()
                     .Build())
                 .Build();
 
             var _managedMqttClient = new MqttFactory().CreateManagedMqttClient();
-            _managedMqttClient.StartAsync(options);
             managedMqttClient = _managedMqttClient;
+            clientOptions = options;
         }
 
-        public Boolean SendMessage(MqttApplicationMessage message)
+        public async Task StartManager()
         {
-            if (managedMqttClient.IsStarted)
+            await managedMqttClient.StartAsync(clientOptions);
+        }
+
+        public async Task<bool> SubscribeTopic(string topic)
+        {
+            if (!managedMqttClient.IsStarted || !managedMqttClient.IsConnected) return false;
+            await managedMqttClient.SubscribeAsync(topic);
+            return true;
+
+        }
+
+        public bool SendMessage(string topic, string message)
+        {
+            var mqttMessage = CreateMessage(topic, message);
+            if (managedMqttClient.IsStarted && managedMqttClient.IsConnected)
             {
-                managedMqttClient.PublishAsync(message);
+                managedMqttClient.PublishAsync(mqttMessage);
                 //managedMqttClient.ApplicationMessageProcessed;
+                return true;
             }
             return false;
         }
 
-        public MqttApplicationMessage CreateMessage(string topic, string message)
+        //public List<string> SubscribedTopic()
+        //{
+        //    managedMqttClient.
+        //}
+         
+        private MqttApplicationMessage CreateMessage(string topic, string message)
         {
             return new MqttApplicationMessageBuilder().
                 WithTopic(topic).
@@ -48,5 +70,6 @@ namespace Client.MQTT
                 WithRetainFlag().
                 Build();
         }
+
     }
 }
