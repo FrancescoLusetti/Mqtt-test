@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Client.MQTT;
 using MQTTnet;
 using MQTTnet.Client;
+using MQTTnet.Client.Options;
 using MQTTnet.Extensions.ManagedClient;
 
 namespace Client
