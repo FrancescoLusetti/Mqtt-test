@@ -17,7 +17,7 @@ namespace Server
             //Opzioni del server MQTT
             var option = new MqttServerOptionsBuilder()
 
-                //.WithDefaultEndpointPort(1883)//Dove mandare i messaggi
+                .WithDefaultEndpointPort(1883)//Dove mandare i messaggi
                 .WithEncryptedEndpointPort(1883) //Dove mandare i messaggi con criptazione TLS 1.2
                 .WithEncryptionSslProtocol(System.Security.Authentication.SslProtocols.Tls12)
                 .WithStorage(new RetainedMessageHandler()) //salva i messaggi in un file JSON
